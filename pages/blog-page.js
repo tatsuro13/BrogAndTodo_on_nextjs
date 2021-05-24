@@ -1,14 +1,20 @@
 import Layout from '../components/Layouts';
 import Link from 'next/link';
+import { getAllPostData } from '../lib/posts';
+import Post from '../components/Post';
 
-export default function BrogPage() {
+export default function BrogPage({ filteredPosts }) {
   return (
     <Layout title="Brog page">
+      <ul>
+        {filteredPosts &&
+          filteredPosts.map((post) => <Post key={post.id} post={post} />)}
+      </ul>
       <Link href="/main-page">
         <div className="flex cursor-pointer mt-12">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 mr-3"
+            className="h-6 w-6 mr-3"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -25,4 +31,11 @@ export default function BrogPage() {
       </Link>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  const filteredPosts = await getAllPostData();
+  return {
+    props: { filteredPosts },
+  };
 }
